@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>PTAS Cognitive Measures</title>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>  <!--angular load-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-animate.min.js"></script> <!-- angular animate load -->
+        <script src="js/controllers.js"></script>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">  <!-- bootstrap css load -->
+        
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    
+    <body>
+        <div ng-controller="MyController">
+            
+            <div class="container-fluid">
+                <nav class="navbar navbar-default">
+                    <section class="row">
+                        <section class="col-xs-12 col-sm-3">
+                            <div class="navbar-header">
+                                <a href="" class="navbar-brand">PTAS Cognitive Measures</a>
+                            </div>
+                        </section>
+                        
+                        <section class="container-fluid">
+                            <section class="col-xs-12 col-sm-7">
+                               <section class="row">
+                                    <form class="navbar-form" role="search">
+                                        <section class="form-group">
+                                           <section class="col-xs-6 col-sm-8">
+                                               <div class="input-group">
+                                                        <input name="search" id="searchbox" type="search" class="form-control" placeholder="Enter user id or leave empty for all results"
+                                                                data-toggle="tooltip" data-placement="bottom" title="Enter user ID" ng-focus = "removett()">
+                                                        <span class="input-group-btn">
+                                                            <button id="search" class="btn btn-primary" ng-click="firstpage()"><span class="glyphicon glyphicon-search"></span></button>
+                                                        </span>
+                                               </div>
+                                            </section>
+                                            <section class="col-xs-3 col-sm-2">
+                                                <button id="clear" class="btn btn-default" ng-click="clear()">Clear</button>
+                                            </section>
+                                       </section>
+                                    </form>
+                                   
+                                </section>
+                            </section> 
+                        </section>
+                    </section>  
+                </nav>
+                
+                
+                <section id="alldetails">
+                    <table class="table table-hover">
+                        <thead>
+                            <th>#</th>
+                            <th>User ID</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </thead>
+
+                        <tr ng-repeat="item in users | orderBy: 'userId'">
+                            <td> <b>{{$index+1}} </b></td>
+                            <td> {{item.userId}} </td>
+                            <td> {{item.start}} </td>
+                            <td> {{item.end}}</td>
+
+                            <td> <button class="btn btn-default" width='20' height='20' ng-click="showdetails(item)">
+                                     <span class="glyphicon glyphicon-chevron-right"></span> 
+                                 </button> 
+                            </td>
+                            
+                            
+<!--
+                            
+                            <td> <button class="btn btn-default" width='20' height='20' ng-click="delete(item.uid)">
+                                     <span class="glyphicon glyphicon-trash"></span> 
+                                 </button> 
+                            </td>
+                            
+-->
+                            
+                        </tr>
+                    </table>
+                </section>
+                
+                <section id="indidetails">
+                    <button class="btn btn-default" ng-click="goback()"> 
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        Back 
+                    </button>
+                    
+                   <table class="table table-hover">
+                        <thead>
+                            <th>User ID</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </thead>
+                       
+                        <tr>
+                            <td>{{current.userId}}</td>
+                            <td>{{current.start}}</td>
+                            <td>{{current.end}}</td>
+                        </tr>
+                    </table>
+     
+                    <ul class="nav nav-tabs">
+                        <li id="{{'tabh'+$index}}" class="tabs" ng-class="makeactive()" ng-repeat = "item in sections">
+                            <a data-toggle="tab" href="{{'#tab'+($index)}}">{{item.name}}</a>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content">
+                        <div ng-repeat="item in sections" id="{{'tab'+$index}}" ng-class="tabclass($index)">
+                            <table class="table table-hover">
+                                <thead>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                </thead>
+
+                                <tr>
+                                    <td>{{item.start}}</td>
+                                     <td>{{item.end}}</td>
+                                </tr>
+                            </table>
+                            
+                            <div class="row">
+                                <section class="col-xs-12 col-sm-6" ng-repeat="block in item.blocks">
+                                    <table class="table table-hover">
+                                        <caption>Block {{block.number}}</caption>
+                                        <thead>
+                                            <th>Start time</th>
+                                            <th>End time</th>
+                                            <th>Answer</th>
+                                            <th>Result</th>
+                                        </thead>
+                                        
+                                        <tr ng-repeat="answer in block.answers">
+                                            <td>{{answer.start}}</td>
+                                            <td>{{answer.end}}</td>
+                                            <td>{{answer.user_ans}}</td>
+                                            <td><span ng-class="result(answer.correct)"></span></td>
+                                        </tr>
+                                        <tfoot>
+                                            <tr><td>Score: {{block.score}}</td></tr>
+                                        </tfoot>
+                                    </table>
+                                </section>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </section>
+            </div>
+            
+        </div>
+        
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> <!-- jquery load -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> <!-- bootstrap js load -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+    
+    </body>
